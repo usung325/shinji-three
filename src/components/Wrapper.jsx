@@ -4,7 +4,7 @@ import Sphere from "./Sphere";
 export default function Wrapper() {
   return (
     <>
-      <OrbitControls />
+      {/* <OrbitControls /> */}
       <Sphere />
     </>
   );

@@ -18,7 +18,7 @@ export default function Sphere() {
   const calculateRectangleVertices = (point, normal) => {
     const up = new THREE.Vector3(0, 1, 0);
     const width = 0.1; // base width
-    const height = 10; // box height
+    const height = 5; // box height
     const depth = width; // making depth same as width for a square base
 
     // If normal is parallel to up vector, use right vector instead
@@ -204,6 +204,9 @@ export default function Sphere() {
   ///// gpt //////////// gpt //////////// gpt //////////// gpt //////////// gpt //////////// gpt //////////// gpt ///////
 
   const handleClick = (e) => {
+    console.log(clockRef.current.elapsedTime % 2.0);
+    if (clockRef.current.elapsedTime % 0.2 <= 0.01) {
+    }
     const point = e.intersections[0].point;
     const normal = e.intersections[0].normal;
     setPoints((prev) => [
@@ -250,8 +253,9 @@ export default function Sphere() {
 
   return (
     <group>
+      {/* or onClick */}
       <mesh ref={meshRef} onClick={(e) => handleClick(e)}>
-        <sphereGeometry args={[3, 75, 75]} />
+        <sphereGeometry args={[13, 75, 75]} />
         <shaderMaterial
           vertexShader={vertex}
           fragmentShader={fragment}

@@ -5,7 +5,7 @@ import Wrapper from "./components/Wrapper";
 function App() {
   return (
     <>
-      <Canvas>
+      <Canvas camera={{ position: [-10, 20, 5] }}>
         <Wrapper />
       </Canvas>
     </>
