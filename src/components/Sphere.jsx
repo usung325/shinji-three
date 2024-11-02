@@ -5,14 +5,21 @@ import vertex from "../shaders/sphere/vertex.glsl";
 import * as THREE from "three";
 
 export default function Sphere() {
+  let tick;
   const clockRef = useRef(new THREE.Clock());
 
   const meshRef = useRef(null);
+  const groupRef = useRef(null);
   const [points, setPoints] = useState([]);
   const [arrPoints, setArrPoints] = useState(
     new Array(100).fill(new THREE.Vector3(0, 0, 0))
   );
   const [arrStartT, setArrStartT] = useState(new Array(100).fill(0.0));
+
+  // TEXTURES //
+  const textureLoader = new THREE.TextureLoader();
+  const texture = textureLoader.load("/textures/day.jpg");
+  texture.colorSpace = THREE.SRGBColorSpace;
 
   ///// gpt //////////// gpt //////////// gpt //////////// gpt //////////// gpt //////////// gpt //////////// gpt ///////
   const calculateRectangleVertices = (point, normal) => {
@@ -230,6 +237,7 @@ export default function Sphere() {
     uCount: { value: 0 },
     uTime: { value: clockRef.current.elapsedTime },
     uStartArr: { value: arrStartT },
+    uTexture: { value: texture },
   });
 
   useEffect(() => {
@@ -247,19 +255,23 @@ export default function Sphere() {
   }, [points]);
 
   useFrame(() => {
+    tick = clockRef.current.elapsedTime;
+    // groupRef.current.rotation.y = tick;
+
     meshRef.current.material.uniforms.uTime.value =
       clockRef.current.getElapsedTime();
   });
 
   return (
-    <group>
+    <group ref={groupRef}>
       {/* or onClick */}
       <mesh ref={meshRef} onClick={(e) => handleClick(e)}>
-        <sphereGeometry args={[13, 75, 75]} />
+        <sphereGeometry args={[13, 100, 100]} />
         <shaderMaterial
           vertexShader={vertex}
           fragmentShader={fragment}
           uniforms={uniforms.current}
+          wireframe={false}
         />
       </mesh>
 

@@ -4,6 +4,7 @@ varying vec2 vUv;
 varying vec3 vPos;
 varying mat4 vModelMatrix;
 
+uniform sampler2D uTexture;
 uniform vec3 uPos[MAX_COUNT];
 uniform int uCount;
 uniform float uTime;
@@ -18,15 +19,16 @@ float drawCircle(vec3 point, vec3 center, float radius) {
     return 1.0 - step(radius, d);
 }
 
-float getAnimatedRadius(float startTime) {
+float getAnimatedRadius(float startTime, float radius) {
     float timeSinceStart = uTime - startTime;
-    float progress = clamp(timeSinceStart / ANIMATION_DURATION, 0.0, 1.0);
+    float progress = clamp(timeSinceStart / ANIMATION_DURATION, 0.0, radius);
     // float easedProgress = easeOutElastic(progress);
     return mix(START_RADIUS, END_RADIUS, progress);
 }
 
 void main() {
-    vec3 col = vec3(vUv.x, vUv.y, 0.0);
+    vec3 earthCol = texture(uTexture, vUv).rgb;
+    vec3 col = vec3(earthCol);
 
     vec3 worldPos = (vModelMatrix * vec4(vPos, 1.0)).xyz;
 
@@ -35,7 +37,7 @@ void main() {
 
     for(int i = MAX_COUNT; i > 0; i--){
         if (i <= 0) break;
-        float circle = drawCircle(worldPos, uPos[i], getAnimatedRadius(uStartArr[i]));
+        float circle = drawCircle(worldPos, uPos[i], getAnimatedRadius(uStartArr[i], 5.0));
         circleMask += circle;
     }
     vec3 circleCol = vec3(1.0, 0.4, 0.2);
