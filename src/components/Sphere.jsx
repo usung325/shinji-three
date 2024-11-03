@@ -3,6 +3,7 @@ import { useFrame } from "@react-three/fiber";
 import fragment from "../shaders/sphere/fragment.glsl";
 import vertex from "../shaders/sphere/vertex.glsl";
 import * as THREE from "three";
+import Cross from "./Cross";
 
 export default function Sphere() {
   let tick;
@@ -211,7 +212,8 @@ export default function Sphere() {
   ///// gpt //////////// gpt //////////// gpt //////////// gpt //////////// gpt //////////// gpt //////////// gpt ///////
 
   const handleClick = (e) => {
-    console.log(clockRef.current.elapsedTime % 2.0);
+    e.stopPropagation();
+    // console.log(clockRef.current.elapsedTime % 2.0);
     if (clockRef.current.elapsedTime % 0.2 <= 0.01) {
     }
     const point = e.intersections[0].point;
@@ -227,9 +229,10 @@ export default function Sphere() {
     setArrStartT((prev) => [...prev, clockRef.current.elapsedTime]);
     setArrPoints((prev) => [...prev, point]);
 
-    console.log(arrPoints);
-    console.log(arrStartT);
-    console.log(clockRef.current.elapsedTime);
+    // console.log(points);
+    // console.log(arrPoints);
+    // console.log(arrStartT);
+    // console.log(clockRef.current.elapsedTime);
   };
 
   const uniforms = useRef({
@@ -275,10 +278,12 @@ export default function Sphere() {
         />
       </mesh>
 
-      {points.map((data, i) => {
+      {points.map((data, i = 0) => {
+        console.log(data);
         return (
           <group key={i}>
-            <mesh>
+            <Cross normalVec3={data.normal} />
+            {/* <mesh>
               <bufferGeometry>
                 <bufferAttribute
                   attach="attributes-position"
@@ -288,7 +293,7 @@ export default function Sphere() {
                 />
               </bufferGeometry>
               <meshBasicMaterial color="#88E19E" side={THREE.DoubleSide} />
-            </mesh>
+            </mesh> */}
           </group>
         );
       })}

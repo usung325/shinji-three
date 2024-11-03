@@ -40,8 +40,11 @@ void main() {
         float circle = drawCircle(worldPos, uPos[i], getAnimatedRadius(uStartArr[i], 5.0));
         circleMask += circle;
     }
+
     vec3 circleCol = vec3(1.0, 0.4, 0.2);
     col = mix(col, circleCol, circleMask);
+    col = clamp(col, vec3(0.0), circleCol);
+
 
 
     gl_FragColor = vec4(col, 1.0);
