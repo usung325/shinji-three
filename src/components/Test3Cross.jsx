@@ -31,6 +31,18 @@ export function Cross4({ normalVec3 }) {
 
   useEffect(() => {
     /////GPT//////////GPT//////////[IT KIND OF WORKS]/////////GPT//////////GPT/////
+    // // Convert normal to orientation vectors
+    // const up = new THREE.Vector3(0, 1, 0);
+
+    // // Calculate the rotation axis by crossing the up vector with the normal
+    // const rotationAxis = new THREE.Vector3().crossVectors(up, normalVec3);
+
+    // // Calculate the angle between the up vector and normal
+    // const angle = Math.acos(up.dot(normalVec3));
+
+    // // Apply the rotation
+    // group.current.setRotationFromAxisAngle(rotationAxis, angle);
+    /////GPT//////////GPT//////////GPT//////////GPT//////////GPT/////
     // Convert normal to orientation vectors
     const up = new THREE.Vector3(0, 1, 0);
 
@@ -40,8 +52,23 @@ export function Cross4({ normalVec3 }) {
     // Calculate the angle between the up vector and normal
     const angle = Math.acos(up.dot(normalVec3));
 
-    // Apply the rotation
-    group.current.setRotationFromAxisAngle(rotationAxis, angle);
+    // Create a rotation matrix for aligning with the normal
+    const alignMatrix = new THREE.Matrix4();
+    alignMatrix.makeRotationAxis(rotationAxis, angle);
+
+    // Generate random angle for z-axis rotation (in radians)
+    const randomZRotation = Math.random() * Math.PI * 2;
+
+    // Create a rotation matrix for the z-axis rotation
+    const zRotationMatrix = new THREE.Matrix4();
+    zRotationMatrix.makeRotationAxis(normalVec3.normalize(), randomZRotation);
+
+    // Combine the rotations by multiplying the matrices
+    const finalMatrix = new THREE.Matrix4();
+    finalMatrix.multiplyMatrices(zRotationMatrix, alignMatrix);
+
+    // Apply the combined rotation to the group
+    group.current.setRotationFromMatrix(finalMatrix);
     /////GPT//////////GPT//////////GPT//////////GPT//////////GPT/////
   }, [normalVec3]);
 
@@ -58,7 +85,7 @@ export function Cross4({ normalVec3 }) {
           scale={[0.001, 0.011, 0.001]}
         >
           <meshStandardMaterial
-            color={[0.3 + 0.5, 1.0 + 0.5, 0.4 + 0.5]}
+            color={[0.3 + 0.3, 1.0 + 0.3, 0.4 + 0.3]}
             emissive="#9BD495"
             emissiveIntensity={1}
             toneMapped={false}

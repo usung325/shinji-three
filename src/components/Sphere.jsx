@@ -46,6 +46,7 @@ export default function Sphere() {
       {
         point: point,
         normal: normal,
+        size: Math.max(Math.random() + 0.2, 0.5),
       },
     ]);
     setArrStartT((prev) => [...prev, clockRef.current.elapsedTime]);
@@ -119,7 +120,7 @@ export default function Sphere() {
       {points.map((data, i = 0) => {
         // console.log(data);
         return (
-          <group key={i} position={data.point} scale={0.2}>
+          <group key={i} position={data.point} scale={data.size}>
             <Cross4 normalVec3={data.normal} />
             {/* <Cross3 normalVec3={data.normal} /> */}
             {/* <Cross normalVec3={data.normal} /> */}
