@@ -50,6 +50,7 @@ void main() {
 
     //cloud color
     vec2 cloudCol = texture(uCloudTexture, vUv).rg;
+    float specularNormal = cloudCol.r;
     float cloud = cloudCol.g;
     float cloudMix = smoothstep(0.2, 1.0, cloud);
     col = mix(col, vec3(1.0), cloudMix * dayMix);
@@ -63,7 +64,16 @@ void main() {
     fresnel = pow(fresnel, 2.0);
     col = mix(col, atmosphereCol, fresnel * atmosphereDayMix);
 
+    //specular
+    vec3 refelction = reflect(- uSunDirection, normal);
+    float specular =- dot(refelction, viewDirection);
+    specular = max(specular, 0.0);
+    specular = pow(specular, 32.0);
 
+    vec3 specularCol = mix(vec3(1.0),  atmosphereCol, fresnel);
+    specularCol *= specularNormal;
+    col += specular * specularCol;
+    // col = mix(col, specularCol, specular);
 
     vec3 worldPos = (vModelMatrix * vec4(vPos, 1.0)).xyz;
     float circleMask = 0.0;
