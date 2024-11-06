@@ -13,7 +13,7 @@ export default function Sphere() {
   const clockRef = useRef(new THREE.Clock());
 
   const meshRef = useRef(null);
-  const lightRef = useRef(null);
+  const atmosphereMesh = useRef(null);
   const groupRef = useRef(null);
   const [points, setPoints] = useState([]);
   const [arrPoints, setArrPoints] = useState(
@@ -96,6 +96,11 @@ export default function Sphere() {
           uniforms={uniforms.current}
           wireframe={false}
         />
+      </mesh>
+
+      <mesh ref={atmosphereMesh} scale={1.04}>
+        <sphereGeometry args={[13, 100, 100]} />
+        <shaderMaterial side={THREE.BackSide} />
       </mesh>
 
       {points.map((data, i = 0) => {
