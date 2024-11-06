@@ -3,6 +3,8 @@ import { useFrame } from "@react-three/fiber";
 import { EffectComposer, SelectiveBloom } from "@react-three/postprocessing";
 import fragment from "../shaders/sphere/fragment.glsl";
 import vertex from "../shaders/sphere/vertex.glsl";
+import fragmentvertexAtmosphere from "../shaders/atmosphere/fragment.glsl";
+import vertexvertexAtmosphere from "../shaders/atmosphere/vertex.glsl";
 import * as THREE from "three";
 import Cross from "./Cross";
 import { Cross2 } from "./TestCross";
@@ -100,7 +102,12 @@ export default function Sphere() {
 
       <mesh ref={atmosphereMesh} scale={1.04}>
         <sphereGeometry args={[13, 100, 100]} />
-        <shaderMaterial side={THREE.BackSide} />
+        <shaderMaterial
+          vertexShader={vertexvertexAtmosphere}
+          fragmentShader={fragmentvertexAtmosphere}
+          transparent={true}
+          side={THREE.BackSide}
+        />
       </mesh>
 
       {points.map((data, i = 0) => {
