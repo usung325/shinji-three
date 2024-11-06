@@ -57,7 +57,12 @@ export function Cross4({ normalVec3 }) {
           //   position={[0, 0.334, 0]}
           scale={[0.001, 0.011, 0.001]}
         >
-          <meshBasicMaterial color="lightgreen" />
+          <meshStandardMaterial
+            color={[0.5, 2.0, 0.5]}
+            emissive="lightgreen"
+            emissiveIntensity={1}
+            toneMapped={false}
+          />
         </mesh>
       </group>
     </group>
