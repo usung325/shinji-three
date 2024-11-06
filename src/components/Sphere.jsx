@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
+import { EffectComposer, SelectiveBloom } from "@react-three/postprocessing";
 import fragment from "../shaders/sphere/fragment.glsl";
 import vertex from "../shaders/sphere/vertex.glsl";
 import * as THREE from "three";
@@ -13,6 +14,7 @@ export default function Sphere() {
   const clockRef = useRef(new THREE.Clock());
 
   const meshRef = useRef(null);
+  const lightRef = useRef(null);
   const groupRef = useRef(null);
   const [points, setPoints] = useState([]);
   const [arrPoints, setArrPoints] = useState(

@@ -39,10 +39,12 @@ void main() {
     for(int i = MAX_COUNT; i > 0; i--){
         if (i <= 0) break;
         float circle = drawCircle(worldPos, uPos[i], getAnimatedRadius(uStartArr[i], RADIUS));
-        circleMask += circle;
+        circleMask += circle * 20.0;
     }
+    // circleMask = clamp(circleMask, 0.0, 1.0);
 
-    vec3 circleCol = vec3(1.0, 0.4, 0.2);
+    // vec3 circleCol = vec3(0.7, 0.28, 0.14);
+    vec3 circleCol = vec3(1.0, 0.3, 0.1);
     col = mix(col, circleCol, circleMask);
     col = clamp(col, vec3(0.0), circleCol);
 
