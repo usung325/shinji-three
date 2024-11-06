@@ -1,5 +1,5 @@
 #define MAX_COUNT 100
-#define RADIUS 1.0
+#define RADIUS 2.0
 
 varying vec2 vUv;
 varying vec3 vPos;
@@ -8,13 +8,14 @@ varying mat4 vModelMatrix;
 
 uniform sampler2D uDayTexture;
 uniform sampler2D uNightTexture;
+uniform sampler2D uCloudTexture;
 
 uniform vec3 uPos[MAX_COUNT];
 uniform int uCount;
 uniform float uTime;
 uniform float uStartArr[MAX_COUNT];
 
-const float ANIMATION_DURATION = 0.2;
+const float ANIMATION_DURATION = 1.5;
 const float START_RADIUS = 0.0;
 const float END_RADIUS = 0.7;
 
@@ -39,7 +40,15 @@ void main() {
     //Sun Direciton
     vec3 uSunDirection = vec3(0.0,0.0,1.0);
     float sunOrientation = dot(uSunDirection, normal);
-    col = vec3(sunOrientation);
+    float dayMix = smoothstep(- 0.25, 0.5, sunOrientation);
+    // col = vec3(sunOrientation);
+    col = mix(nightCol, dayCol,dayMix);
+
+    //cloud color
+    vec2 cloudCol = texture(uCloudTexture, vUv).rg;
+    float cloud = cloudCol.g;
+    col = mix(col, vec3(1.0), cloud);
+
 
     vec3 worldPos = (vModelMatrix * vec4(vPos, 1.0)).xyz;
 
@@ -51,12 +60,12 @@ void main() {
         float circle = drawCircle(worldPos, uPos[i], getAnimatedRadius(uStartArr[i], RADIUS));
         circleMask += circle * 20.0;
     }
-    // circleMask = clamp(circleMask, 0.0, 1.0);
+    circleMask = clamp(circleMask, 0.0, 2.0);
 
     // vec3 circleCol = vec3(0.7, 0.28, 0.14);
     vec3 circleCol = vec3(1.0, 0.3, 0.1);
     col = mix(col, circleCol, circleMask);
-    col = clamp(col, vec3(0.0), circleCol);
+    // col = clamp(col, vec3(0.0), circleCol);
 
 
 

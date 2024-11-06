@@ -24,9 +24,13 @@ export default function Sphere() {
   // TEXTURES //
   const textureLoader = new THREE.TextureLoader();
   const textureDay = textureLoader.load("/textures/day.jpg");
+  textureDay.anisotropy = 8; //sharpness of texture
   const textureNight = textureLoader.load("/textures/night.jpg");
+  textureNight.anisotropy = 8;
+  const textureClouds = textureLoader.load("/textures/specular.jpg");
   textureDay.colorSpace = THREE.SRGBColorSpace;
   textureNight.colorSpace = THREE.SRGBColorSpace;
+  textureClouds.colorSpace = THREE.SRGBColorSpace;
 
   const handleClick = (e) => {
     e.stopPropagation();
@@ -53,6 +57,7 @@ export default function Sphere() {
     uStartArr: { value: arrStartT },
     uDayTexture: { value: textureDay },
     uNightTexture: { value: textureNight },
+    uCloudTexture: { value: textureClouds },
   });
 
   useEffect(() => {
