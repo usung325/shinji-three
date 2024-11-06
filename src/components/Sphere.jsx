@@ -54,7 +54,7 @@ export default function Sphere() {
 
   const earthParams = {};
   earthParams.dayCol = "#00aaff";
-  earthParams.midCol = "#ff6600";
+  earthParams.midCol = "#FE7E21";
 
   const uniforms = useRef({
     uPos: { value: arrPoints },
@@ -64,6 +64,11 @@ export default function Sphere() {
     uDayTexture: { value: textureDay },
     uNightTexture: { value: textureNight },
     uCloudTexture: { value: textureClouds },
+    uAtmosphereDay: { value: new THREE.Color(earthParams.dayCol) },
+    uAtmosphereMid: { value: new THREE.Color(earthParams.midCol) },
+  });
+
+  const uniformsAtmosphere = useRef({
     uAtmosphereDay: { value: new THREE.Color(earthParams.dayCol) },
     uAtmosphereMid: { value: new THREE.Color(earthParams.midCol) },
   });
@@ -106,6 +111,7 @@ export default function Sphere() {
           vertexShader={vertexvertexAtmosphere}
           fragmentShader={fragmentvertexAtmosphere}
           transparent={true}
+          uniforms={uniformsAtmosphere.current}
           side={THREE.BackSide}
         />
       </mesh>

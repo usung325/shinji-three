@@ -30,13 +30,19 @@ float getAnimatedRadius(float startTime, float radius) {
 }
 
 void main() {
-    vec3 col = vec3(1.0, 0.3, 0.0);
+    vec3 col = vec3(0.996,0.494,0.129);
     vec3 viewDirection = normalize(vPos - cameraPosition);
     vec3 normal = normalize(vNormal);
 
     //Sun Direciton
     vec3 uSunDirection = vec3(0.0,0.0,1.0);
     float sunOrientation = dot(uSunDirection, normal);
+
+    //alpha
+    float edgeAlpha = dot(viewDirection, normal);
+    edgeAlpha = smoothstep(0.1, 0.5, edgeAlpha);
+    float dayAlpha = smoothstep(-0.5, 0.0, sunOrientation);
+    float finalAlpha = edgeAlpha;
 
     //atmospehre color
     float atmosphereDayMix = smoothstep(-0.5, 1.0, sunOrientation);
@@ -45,23 +51,7 @@ void main() {
     // col = atmosphereCol;
     col = mix(col, atmosphereCol, atmosphereDayMix);
 
-    vec3 worldPos = (vModelMatrix * vec4(vPos, 1.0)).xyz;
-    float circleMask = 0.0;
-    for(int i = MAX_COUNT; i > 0; i--){
-        if (i <= 0) break;
-        float circle = drawCircle(worldPos, uPos[i], getAnimatedRadius(uStartArr[i], RADIUS));
-        circleMask += circle * 20.0;
-    }
-    circleMask = clamp(circleMask, 0.0, 2.0);
-
-    // vec3 circleCol = vec3(0.7, 0.28, 0.14);
-    vec3 circleCol = vec3(1.0, 0.3, 0.1);
-    col = mix(col, circleCol, circleMask);
-    // col = clamp(col, vec3(0.0), circleCol);
-
-
-
-    gl_FragColor = vec4(col, 1.0);
+    gl_FragColor = vec4(col, finalAlpha) ;
 }
 
 
