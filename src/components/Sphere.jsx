@@ -50,6 +50,10 @@ export default function Sphere() {
     setArrPoints((prev) => [...prev, point]);
   };
 
+  const earthParams = {};
+  earthParams.dayCol = "#00aaff";
+  earthParams.midCol = "#ff6600";
+
   const uniforms = useRef({
     uPos: { value: arrPoints },
     uCount: { value: 0 },
@@ -58,6 +62,8 @@ export default function Sphere() {
     uDayTexture: { value: textureDay },
     uNightTexture: { value: textureNight },
     uCloudTexture: { value: textureClouds },
+    uAtmosphereDay: { value: new THREE.Color(earthParams.dayCol) },
+    uAtmosphereMid: { value: new THREE.Color(earthParams.midCol) },
   });
 
   useEffect(() => {

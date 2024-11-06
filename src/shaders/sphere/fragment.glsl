@@ -15,6 +15,9 @@ uniform int uCount;
 uniform float uTime;
 uniform float uStartArr[MAX_COUNT];
 
+uniform vec3 uAtmosphereDay;
+uniform vec3 uAtmosphereMid;
+
 const float ANIMATION_DURATION = 1.5;
 const float START_RADIUS = 0.0;
 const float END_RADIUS = 0.7;
@@ -34,6 +37,7 @@ float getAnimatedRadius(float startTime, float radius) {
 void main() {
     vec3 dayCol = texture(uDayTexture, vUv).rgb;
     vec3 nightCol = texture(uNightTexture, vUv).rgb;
+    vec3 viewDirection = normalize(vPos - cameraPosition);
     vec3 normal = normalize(vNormal);
     vec3 col = vec3(dayCol);
 
@@ -47,14 +51,22 @@ void main() {
     //cloud color
     vec2 cloudCol = texture(uCloudTexture, vUv).rg;
     float cloud = cloudCol.g;
-    col = mix(col, vec3(1.0), cloud);
+    float cloudMix = smoothstep(0.2, 1.0, cloud);
+    col = mix(col, vec3(1.0), cloudMix * dayMix);
+
+    //atmospehre color
+    float atmosphereDayMix = smoothstep(-0.5, 1.0, sunOrientation);
+    // float atmosphereMidMix = smoothstep(0.5, 1.0, sunOrientation);
+    vec3 atmosphereCol = mix(uAtmosphereMid, uAtmosphereDay, atmosphereDayMix);
+    // col = atmosphereCol;
+    float fresnel = dot(viewDirection, normal) + 1.0;
+    fresnel = pow(fresnel, 2.0);
+    col = mix(col, atmosphereCol, fresnel * atmosphereDayMix);
+
 
 
     vec3 worldPos = (vModelMatrix * vec4(vPos, 1.0)).xyz;
-
     float circleMask = 0.0;
-
-
     for(int i = MAX_COUNT; i > 0; i--){
         if (i <= 0) break;
         float circle = drawCircle(worldPos, uPos[i], getAnimatedRadius(uStartArr[i], RADIUS));
