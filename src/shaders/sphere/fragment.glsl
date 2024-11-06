@@ -3,6 +3,7 @@
 
 varying vec2 vUv;
 varying vec3 vPos;
+varying vec3 vNormal;
 varying mat4 vModelMatrix;
 
 uniform sampler2D uDayTexture;
@@ -32,7 +33,13 @@ float getAnimatedRadius(float startTime, float radius) {
 void main() {
     vec3 dayCol = texture(uDayTexture, vUv).rgb;
     vec3 nightCol = texture(uNightTexture, vUv).rgb;
+    vec3 normal = normalize(vNormal);
     vec3 col = vec3(dayCol);
+
+    //Sun Direciton
+    vec3 uSunDirection = vec3(0.0,0.0,1.0);
+    float sunOrientation = dot(uSunDirection, normal);
+    col = vec3(sunOrientation);
 
     vec3 worldPos = (vModelMatrix * vec4(vPos, 1.0)).xyz;
 
