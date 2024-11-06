@@ -49,7 +49,7 @@ export default function Cross({ normalVec3 = new THREE.Vector3(0, 0, 0) }) {
 
   return (
     <>
-      <primitive ref={ref} object={model.scene} scale={10} />
+      <Clone ref={ref} object={model.scene} scale={1} />
     </>
   );
 }

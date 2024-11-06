@@ -4,6 +4,9 @@ import fragment from "../shaders/sphere/fragment.glsl";
 import vertex from "../shaders/sphere/vertex.glsl";
 import * as THREE from "three";
 import Cross from "./Cross";
+import { Cross2 } from "./TestCross";
+import { Cross3 } from "./Test2Cross";
+import { Cross4 } from "./Test3Cross";
 
 export default function Sphere() {
   let tick;
@@ -279,10 +282,13 @@ export default function Sphere() {
       </mesh>
 
       {points.map((data, i = 0) => {
-        console.log(data);
+        // console.log(data);
         return (
-          <group key={i}>
-            <Cross normalVec3={data.normal} />
+          <group key={i} position={data.point} scale={0.2}>
+            <Cross4 normalVec3={data.normal} />
+            {/* <Cross3 normalVec3={data.normal} /> */}
+            {/* <Cross normalVec3={data.normal} /> */}
+            {/* <Cross2 normalVec3={data.normal} /> */}
             {/* <mesh>
               <bufferGeometry>
                 <bufferAttribute

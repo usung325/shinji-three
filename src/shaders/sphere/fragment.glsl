@@ -1,4 +1,5 @@
 #define MAX_COUNT 100
+#define RADIUS 1.0
 
 varying vec2 vUv;
 varying vec3 vPos;
@@ -37,7 +38,7 @@ void main() {
 
     for(int i = MAX_COUNT; i > 0; i--){
         if (i <= 0) break;
-        float circle = drawCircle(worldPos, uPos[i], getAnimatedRadius(uStartArr[i], 5.0));
+        float circle = drawCircle(worldPos, uPos[i], getAnimatedRadius(uStartArr[i], RADIUS));
         circleMask += circle;
     }
 
