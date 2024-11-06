@@ -10,7 +10,6 @@ import { Cross3 } from "./Test2Cross";
 import { Cross4 } from "./Test3Cross";
 
 export default function Sphere() {
-  let tick;
   const clockRef = useRef(new THREE.Clock());
 
   const meshRef = useRef(null);
@@ -24,197 +23,10 @@ export default function Sphere() {
 
   // TEXTURES //
   const textureLoader = new THREE.TextureLoader();
-  const texture = textureLoader.load("/textures/day.jpg");
-  texture.colorSpace = THREE.SRGBColorSpace;
-
-  ///// gpt //////////// gpt //////////// gpt //////////// gpt //////////// gpt //////////// gpt //////////// gpt ///////
-  const calculateRectangleVertices = (point, normal) => {
-    const up = new THREE.Vector3(0, 1, 0);
-    const width = 0.1; // base width
-    const height = 5; // box height
-    const depth = width; // making depth same as width for a square base
-
-    // If normal is parallel to up vector, use right vector instead
-    if (Math.abs(normal.dot(up)) > 0.99999) {
-      up.set(1, 0, 0);
-    }
-
-    // Calculate right vector (perpendicular to normal and up)
-    const right = new THREE.Vector3().crossVectors(up, normal).normalize();
-    // Recalculate up vector to ensure it's perpendicular
-    const correctedUp = new THREE.Vector3()
-      .crossVectors(normal, right)
-      .normalize();
-
-    const halfWidth = width / 2;
-    const halfHeight = height / 2;
-    const halfDepth = depth / 2;
-
-    // Adjust center point by moving it forward by half depth
-    const centerPoint = point
-      .clone()
-      .add(correctedUp.clone().multiplyScalar(halfDepth));
-
-    // Calculate the 8 corners of the box from the center point
-    const frontBottomLeft = new THREE.Vector3()
-      .copy(centerPoint)
-      .sub(right.clone().multiplyScalar(halfWidth))
-      .sub(correctedUp.clone().multiplyScalar(depth))
-      .sub(normal.clone().multiplyScalar(halfHeight));
-    const frontBottomRight = new THREE.Vector3()
-      .copy(centerPoint)
-      .add(right.clone().multiplyScalar(halfWidth))
-      .sub(correctedUp.clone().multiplyScalar(depth))
-      .sub(normal.clone().multiplyScalar(halfHeight));
-    const frontTopRight = new THREE.Vector3()
-      .copy(centerPoint)
-      .add(right.clone().multiplyScalar(halfWidth))
-      .sub(correctedUp.clone().multiplyScalar(depth))
-      .add(normal.clone().multiplyScalar(halfHeight));
-    const frontTopLeft = new THREE.Vector3()
-      .copy(centerPoint)
-      .sub(right.clone().multiplyScalar(halfWidth))
-      .sub(correctedUp.clone().multiplyScalar(depth))
-      .add(normal.clone().multiplyScalar(halfHeight));
-
-    // Calculate back vertices
-    const backBottomLeft = frontBottomLeft
-      .clone()
-      .add(correctedUp.clone().multiplyScalar(depth));
-    const backBottomRight = frontBottomRight
-      .clone()
-      .add(correctedUp.clone().multiplyScalar(depth));
-    const backTopRight = frontTopRight
-      .clone()
-      .add(correctedUp.clone().multiplyScalar(depth));
-    const backTopLeft = frontTopLeft
-      .clone()
-      .add(correctedUp.clone().multiplyScalar(depth));
-
-    // Rest of the vertices array remains the same
-    return [
-      // Front face
-      frontBottomLeft.x,
-      frontBottomLeft.y,
-      frontBottomLeft.z,
-      frontBottomRight.x,
-      frontBottomRight.y,
-      frontBottomRight.z,
-      frontTopRight.x,
-      frontTopRight.y,
-      frontTopRight.z,
-      frontBottomLeft.x,
-      frontBottomLeft.y,
-      frontBottomLeft.z,
-      frontTopRight.x,
-      frontTopRight.y,
-      frontTopRight.z,
-      frontTopLeft.x,
-      frontTopLeft.y,
-      frontTopLeft.z,
-
-      // Back face
-      backBottomRight.x,
-      backBottomRight.y,
-      backBottomRight.z,
-      backBottomLeft.x,
-      backBottomLeft.y,
-      backBottomLeft.z,
-      backTopLeft.x,
-      backTopLeft.y,
-      backTopLeft.z,
-      backBottomRight.x,
-      backBottomRight.y,
-      backBottomRight.z,
-      backTopLeft.x,
-      backTopLeft.y,
-      backTopLeft.z,
-      backTopRight.x,
-      backTopRight.y,
-      backTopRight.z,
-
-      // Top face
-      frontTopLeft.x,
-      frontTopLeft.y,
-      frontTopLeft.z,
-      frontTopRight.x,
-      frontTopRight.y,
-      frontTopRight.z,
-      backTopRight.x,
-      backTopRight.y,
-      backTopRight.z,
-      frontTopLeft.x,
-      frontTopLeft.y,
-      frontTopLeft.z,
-      backTopRight.x,
-      backTopRight.y,
-      backTopRight.z,
-      backTopLeft.x,
-      backTopLeft.y,
-      backTopLeft.z,
-
-      // Bottom face
-      frontBottomLeft.x,
-      frontBottomLeft.y,
-      frontBottomLeft.z,
-      backBottomLeft.x,
-      backBottomLeft.y,
-      backBottomLeft.z,
-      backBottomRight.x,
-      backBottomRight.y,
-      backBottomRight.z,
-      frontBottomLeft.x,
-      frontBottomLeft.y,
-      frontBottomLeft.z,
-      backBottomRight.x,
-      backBottomRight.y,
-      backBottomRight.z,
-      frontBottomRight.x,
-      frontBottomRight.y,
-      frontBottomRight.z,
-
-      // Right face
-      frontBottomRight.x,
-      frontBottomRight.y,
-      frontBottomRight.z,
-      backBottomRight.x,
-      backBottomRight.y,
-      backBottomRight.z,
-      backTopRight.x,
-      backTopRight.y,
-      backTopRight.z,
-      frontBottomRight.x,
-      frontBottomRight.y,
-      frontBottomRight.z,
-      backTopRight.x,
-      backTopRight.y,
-      backTopRight.z,
-      frontTopRight.x,
-      frontTopRight.y,
-      frontTopRight.z,
-
-      // Left face
-      backBottomLeft.x,
-      backBottomLeft.y,
-      backBottomLeft.z,
-      frontBottomLeft.x,
-      frontBottomLeft.y,
-      frontBottomLeft.z,
-      frontTopLeft.x,
-      frontTopLeft.y,
-      frontTopLeft.z,
-      backBottomLeft.x,
-      backBottomLeft.y,
-      backBottomLeft.z,
-      frontTopLeft.x,
-      frontTopLeft.y,
-      frontTopLeft.z,
-      backTopLeft.x,
-      backTopLeft.y,
-      backTopLeft.z,
-    ];
-  };
-  ///// gpt //////////// gpt //////////// gpt //////////// gpt //////////// gpt //////////// gpt //////////// gpt ///////
+  const textureDay = textureLoader.load("/textures/day.jpg");
+  const textureNight = textureLoader.load("/textures/night.jpg");
+  textureDay.colorSpace = THREE.SRGBColorSpace;
+  textureNight.colorSpace = THREE.SRGBColorSpace;
 
   const handleClick = (e) => {
     e.stopPropagation();
@@ -228,16 +40,10 @@ export default function Sphere() {
       {
         point: point,
         normal: normal,
-        vertices: calculateRectangleVertices(point, normal),
       },
     ]);
     setArrStartT((prev) => [...prev, clockRef.current.elapsedTime]);
     setArrPoints((prev) => [...prev, point]);
-
-    // console.log(points);
-    // console.log(arrPoints);
-    // console.log(arrStartT);
-    // console.log(clockRef.current.elapsedTime);
   };
 
   const uniforms = useRef({
@@ -245,7 +51,8 @@ export default function Sphere() {
     uCount: { value: 0 },
     uTime: { value: clockRef.current.elapsedTime },
     uStartArr: { value: arrStartT },
-    uTexture: { value: texture },
+    uDayTexture: { value: textureDay },
+    uNightTexture: { value: textureNight },
   });
 
   useEffect(() => {
@@ -263,9 +70,6 @@ export default function Sphere() {
   }, [points]);
 
   useFrame(() => {
-    tick = clockRef.current.elapsedTime;
-    // groupRef.current.rotation.y = tick;
-
     meshRef.current.material.uniforms.uTime.value =
       clockRef.current.getElapsedTime();
   });
